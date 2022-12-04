@@ -1,5 +1,7 @@
 package shared;
 
+import java.util.List;
+
 public interface IAddUser {
-    public String addUser(String path,String name,String number);
+    public void addUser(String personName,int personNumber);
 }
