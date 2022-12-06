@@ -13,6 +13,14 @@ public class Person implements IPerson, Serializable {
         this.personNumber = personNumber;
     }
 
+    public String getPersonName() {
+        return personName;
+    }
+
+    public int getPersonNumber() {
+        return personNumber;
+    }
+
     public Person() {
     }
 
@@ -24,5 +32,12 @@ public class Person implements IPerson, Serializable {
     @Override
     public void deleteUser(int personNumber) {
 
+    }
+
+    @Override
+    public void showUsers() {
+        for (Person person:personalPool){
+            System.out.println("ID: "+person.getPersonNumber()+"\n"+"Name: "+person.getPersonName());
+        }
     }
 }
