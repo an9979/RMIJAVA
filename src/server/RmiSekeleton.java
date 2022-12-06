@@ -34,6 +34,7 @@ public class RmiSekeleton implements Runnable{
                 ObjectInputStream readUrl = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
                 String url = (String) readUrl.readObject();
+                System.out.println("URL> "+url);
                 String interfaceName = url.split("/")[0];
                 String methodName = url.split("/")[1];
                 if (interfaceName.equals("Person")) {
@@ -43,14 +44,8 @@ public class RmiSekeleton implements Runnable{
                             objectOutputStream.flush();
                             ObjectInputStream readPerson = new ObjectInputStream(socket.getInputStream());
                             Person personNew = (Person) readPerson.readObject();
-                            System.out.println(personNew);
-                            System.out.print("personName>");
-                            System.out.println(personNew.getPersonName());
                             person.addUser(personNew);
-                            for (Person peson: person.personalPool){
-                                System.out.println(peson.getPersonName());
-                                System.out.println(peson.getPersonNumber());
-                            }
+                            System.out.println("addAdded Succecfully");
                             break;
                         case "showUsers":
                             objectOutputStream.writeObject("showUsers");
@@ -61,9 +56,10 @@ public class RmiSekeleton implements Runnable{
                                 System.out.println("person> "+peson);
                                 objectOutputStream.writeObject(peson);
                                 objectOutputStream.flush();
+                                System.out.println("person Sent! \n ----------//END OF SEND//----------");
                             }
-                                objectOutputStream.writeObject("EOF");
-                                objectOutputStream.flush();
+//                                objectOutputStream.writeObject("EOF");
+//                                objectOutputStream.flush();
                             break;
                     }
 

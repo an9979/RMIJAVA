@@ -48,6 +48,8 @@ public class RmiStub implements IPerson {
             String url = "Person/showUsers";
             objectOutputStream.writeObject(url);
             objectOutputStream.flush();
+            System.out.println("URL SENT!");
+
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             String confirmRecived =(String) objectInputStream.readObject();
             int listSize=(int) objectInputStream.readObject();
@@ -57,8 +59,8 @@ public class RmiStub implements IPerson {
                 }
                 else {
                     do {
-            ObjectInputStream objectInputStreamPerson = new ObjectInputStream(socket.getInputStream());
-                    Person recivedPersonal=(Person) objectInputStreamPerson.readObject();
+//                        ObjectInputStream objectInputStreamPerson = new ObjectInputStream(socket.getInputStream());
+                        Person recivedPersonal=(Person) objectInputStream.readObject();
                         System.out.println(recivedPersonal.getPersonName());
                         System.out.println(recivedPersonal.getPersonNumber());
                         listSize--;
