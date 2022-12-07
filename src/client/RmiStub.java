@@ -17,8 +17,6 @@ public class RmiStub implements IPerson {
     @Override
     public void addUser(Person person) {
         try {
-            System.out.println("adduser");
-            System.out.println("Person> "+person);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             String url = "Person/addUser";
@@ -29,7 +27,6 @@ public class RmiStub implements IPerson {
             ObjectOutputStream personRecive = new ObjectOutputStream(socket.getOutputStream());
                 personRecive.writeObject(person);
                 personRecive.flush();
-                System.out.println("person sent!");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -38,18 +35,31 @@ public class RmiStub implements IPerson {
         }
     }
     @Override
-    public void deleteUser(int personNumber) {
+    public void deleteUser(int rowNumber) {
+        try {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            String url = "Person/deleteUser";
+            objectOutputStream.writeObject(url);
+            objectOutputStream.flush();
+            String confirmRecived =(String) objectInputStream.readObject();
+            if (confirmRecived.equals("editUser")){
+                objectOutputStream.writeObject(rowNumber);
+                objectOutputStream.flush();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
     @Override
     public void showUsers() {
         try {
-            System.out.println("showUsers");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             String url = "Person/showUsers";
             objectOutputStream.writeObject(url);
             objectOutputStream.flush();
-            System.out.println("URL SENT!");
-
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
             String confirmRecived =(String) objectInputStream.readObject();
             int listSize=(int) objectInputStream.readObject();
@@ -58,17 +68,69 @@ public class RmiStub implements IPerson {
                     System.out.println("Nothing found");
                 }
                 else {
+                    int iterator=1;
                     do {
 //                        ObjectInputStream objectInputStreamPerson = new ObjectInputStream(socket.getInputStream());
                         Person recivedPersonal=(Person) objectInputStream.readObject();
-                        System.out.println(recivedPersonal.getPersonName());
-                        System.out.println(recivedPersonal.getPersonNumber());
+                        System.out.print(iterator+"> ");
+                        System.out.println("Name: "+recivedPersonal.getPersonName());
+                        System.out.print(" > ");
+                        System.out.println("ID: "+recivedPersonal.getPersonNumber());
+                        System.out.println("----------");
+                        iterator++;
                         listSize--;
                     }while(listSize>0);
                 }
 //                while(!objectInputStream.readUTF().equals("EOF")){
 //                }
 //                System.out.println("EOF");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void showUser(int rowNumber) {
+        try {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            String url = "Person/showUser";
+            objectOutputStream.writeObject(url);
+            objectOutputStream.flush();
+            System.out.println("URL sent!");
+            String confirmRecived =(String) objectInputStream.readObject();
+            if (confirmRecived.equals("showUser")){
+            System.out.println("confirmRecived!");
+                objectOutputStream.writeObject(rowNumber);
+            objectOutputStream.flush();
+                Person recivedPersonal=(Person) objectInputStream.readObject();
+                System.out.print("----------Selected User----------");
+                System.out.println("Name: "+recivedPersonal.getPersonName());
+                System.out.println("ID: "+recivedPersonal.getPersonNumber());
+                System.out.println("----------");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void editUser(int rowNumber, String changingParam, String userEditModeChangedParam) {
+        try {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+            String url = "Person/editUser";
+            objectOutputStream.writeObject(url);
+            objectOutputStream.flush();
+            String confirmRecived =(String) objectInputStream.readObject();
+            if (confirmRecived.equals("editUser")){
+                objectOutputStream.writeObject(rowNumber+"/"+changingParam+"/"+userEditModeChangedParam);
+                objectOutputStream.flush();
             }
         } catch (IOException e) {
             e.printStackTrace();

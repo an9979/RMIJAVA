@@ -1,24 +1,18 @@
 package server;
 
 
-import shared.IPerson;
-import shared.ISayHello;
 import shared.Person;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 //import static shared.IPerson.personalPool;
 
 public class RmiSekeleton implements Runnable{
     private Person person=new Person();
     private Socket socket;
-//private List<Person> personalList=new ArrayList<Person>();
     public RmiSekeleton(Socket socket ) {
         this.socket = socket;
     }
@@ -28,8 +22,6 @@ public class RmiSekeleton implements Runnable{
     @Override
     public void run() {
         try {
-//            ServerSocket serverSocket = new ServerSocket(8888);
-//            Socket accept = serverSocket.accept();
             while (true) {
                 ObjectInputStream readUrl = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -37,6 +29,7 @@ public class RmiSekeleton implements Runnable{
                 System.out.println("URL> "+url);
                 String interfaceName = url.split("/")[0];
                 String methodName = url.split("/")[1];
+                int rowNumber;
                 if (interfaceName.equals("Person")) {
                     switch (methodName) {
                         case "addUser":
@@ -58,30 +51,30 @@ public class RmiSekeleton implements Runnable{
                                 objectOutputStream.flush();
                                 System.out.println("person Sent! \n ----------//END OF SEND//----------");
                             }
-//                                objectOutputStream.writeObject("EOF");
-//                                objectOutputStream.flush();
+                            break;
+                        case "showUser":
+                            objectOutputStream.writeObject("showUser");
+                            objectOutputStream.flush();
+                            rowNumber=(int) readUrl.readObject();
+                            System.out.println("row number> "+rowNumber);
+                            objectOutputStream.writeObject(person.personalPool.get(rowNumber-1));
+                            objectOutputStream.flush();
+                            System.out.println("person Sent! \n ----------//END OF SEND//----------");
+                            break;
+                        case "editUser":
+                            objectOutputStream.writeObject("editUser");
+                            objectOutputStream.flush();
+                            String editedInfo=(String) readUrl.readObject();
+                            int rowNumberEdited=Integer.parseInt(editedInfo.split("/")[0]);
+                            String changingParam=editedInfo.split("/")[1];
+                            String userEditModeChangedParam=editedInfo.split("/")[2];
+                            person.editUser(rowNumberEdited-1, changingParam,userEditModeChangedParam);
+                            System.out.println("person Edited! \n ----------//END OF SEND//----------");
                             break;
                     }
 
                 }
             }
-//                if(interfaceName.equals("ISayHello")){
-//                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(accept.getOutputStream());
-//                    switch (methodName){
-//                        case "sayHello":
-//                            Person p1=new Person();
-//                            person.addUser(p1);
-////                            String message = sayHello.sayHello();
-////                            objectOutputStream.writeObject(message);
-//                            objectOutputStream.flush();
-//                            break;
-//                        case "test":
-////                            String messege =sayHello.test();
-//                            objectOutputStream.writeObject("message");
-//                            objectOutputStream.flush();
-//                    }
-//                }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
