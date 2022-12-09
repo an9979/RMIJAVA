@@ -1,16 +1,13 @@
 package client;
-
-
 import shared.IPerson;
-import shared.ISayHello;
 import shared.Person;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+
 public class RmiStub implements IPerson {
-    private Socket socket;
+    private final Socket socket;
     public RmiStub() throws IOException {
         this.socket = new Socket("127.0.0.1", 8888);
     }
@@ -28,9 +25,7 @@ public class RmiStub implements IPerson {
                 personRecive.writeObject(person);
                 personRecive.flush();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -47,9 +42,7 @@ public class RmiStub implements IPerson {
                 objectOutputStream.writeObject(rowNumber);
                 objectOutputStream.flush();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -85,9 +78,7 @@ public class RmiStub implements IPerson {
 //                }
 //                System.out.println("EOF");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -100,21 +91,17 @@ public class RmiStub implements IPerson {
             String url = "Person/showUser";
             objectOutputStream.writeObject(url);
             objectOutputStream.flush();
-            System.out.println("URL sent!");
             String confirmRecived =(String) objectInputStream.readObject();
             if (confirmRecived.equals("showUser")){
-            System.out.println("confirmRecived!");
                 objectOutputStream.writeObject(rowNumber);
             objectOutputStream.flush();
-                Person recivedPersonal=(Person) objectInputStream.readObject();
-                System.out.print("----------Selected User----------");
-                System.out.println("Name: "+recivedPersonal.getPersonName());
-                System.out.println("ID: "+recivedPersonal.getPersonNumber());
+                Person receivedPersonal=(Person) objectInputStream.readObject();
+                System.out.println("----------Selected User----------");
+                System.out.println("Name: "+receivedPersonal.getPersonName());
+                System.out.println("ID: "+receivedPersonal.getPersonNumber());
                 System.out.println("----------");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -132,9 +119,7 @@ public class RmiStub implements IPerson {
                 objectOutputStream.writeObject(rowNumber+"/"+changingParam+"/"+userEditModeChangedParam);
                 objectOutputStream.flush();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

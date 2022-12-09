@@ -1,9 +1,7 @@
 package client;
 
 
-import org.w3c.dom.ls.LSOutput;
 import shared.IPerson;
-import shared.ISayHello;
 import shared.Person;
 
 import java.util.Scanner;
@@ -19,7 +17,7 @@ public class Client {
         {
             do {
                 System.out.println("Select action");
-                System.out.println("1-add user  2-show users   3- write exit to shut down");
+                System.out.println("1-add user  2-show users   or you can write exit to shut down");
                 System.out.print("Input>");
                 scan = scanner.next();
                 switch (scan) {
@@ -38,11 +36,11 @@ public class Client {
                         innerloop:
                             {
                                 do {
-                        System.out.println("Select Action");
-                        System.out.println("1-Edit User     2-Delete User   3-Exit user select mode");
+                                    System.out.println("Select Action");
+                                    System.out.println("1-Edit User     2-Delete User   3-Exit user select mode");
                                     optionUserMode = scanner.next();
-                                            int rowNumber;
-                                    switch (optionUserMode) {
+                                    int rowNumber;
+                                    switch (optionUserMode.toLowerCase()) {
                                         case "1":
                                             System.out.println("edit mode enabled");
                                             System.out.print("Enter the Row of User>");
@@ -74,7 +72,7 @@ public class Client {
                                                             break ;
                                                     }
                                                 } while (!userEditMode.equalsIgnoreCase("exit"));
-                                                if (optionUserMode.equalsIgnoreCase("Exit")) {
+                                                if (optionUserMode.equalsIgnoreCase("exit")) {
                                                     break outerloop;
                                                 }
                                             }
@@ -92,7 +90,6 @@ public class Client {
                                                 switch (deleteConfirmation.toLowerCase()){
                                                     case "y":
                                                             RMI.deleteUser(rowNumber);
-
                                                         break deleteModeLoop;
                                                     case "n":
                                                         System.out.println("Delete Canceled! \n Exiting Delete Mode");
@@ -119,7 +116,7 @@ public class Client {
             while (!scan.equalsIgnoreCase("exit"));
         }
         System.out.println("Thanks for Using RMI implementation with socket programming  ");
-        System.out.println("Developed By: Alireza Nasoodi  ");
+        System.out.println("Developed By: Alireza Nasoodi");
     }
     }
 

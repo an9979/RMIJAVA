@@ -29,9 +29,6 @@ public class Person implements IPerson, Serializable {
         return personNumber;
     }
 
-    public Person() {
-    }
-
     @Override
     public void addUser(Person person) {
         personalPool.add(person);
